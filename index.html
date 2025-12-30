@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>IELTS Writing AI</title>
+</head>
+<body>
+
+  <h2>IELTS Writing Task Submission</h2>
+
+  <label>Task type:</label>
+  <select id="taskType">
+    <option value="task1">Task 1</option>
+    <option value="task2">Task 2</option>
+  </select>
+
+  <br /><br />
+
+  <textarea id="essay" rows="10" cols="70"
+    placeholder="Write your essay here..."></textarea>
+
+  <br /><br />
+
+  <button onclick="submitEssay()">Submit</button>
+
+  <p id="status"></p>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDf6ei1v5B-WVmgvaBmcdjhQ0GGQlgLeEQ",
+      authDomain: "ielts-writing-ai-fff54.firebaseapp.com",
+      projectId: "ielts-writing-ai-fff54",
+      storageBucket: "ielts-writing-ai-fff54.firebasestorage.app",
+      messagingSenderId: "417203345012",
+      appId: "1:417203345012:web:27549ffec2baf42a2aa321"
+    };
+
+    const app = firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    function submitEssay() {
+      const essay = document.getElementById("essay").value;
+      const taskType = document.getElementById("taskType").value;
+
+      if (!essay) {
+        alert("Essay yozilmadi");
+        return;
+      }
+
+      db.collection("essays").add({
+        taskType: taskType,
+        content: essay,
+        status: "pending",
+        createdAt: new Date()
+      }).then(() => {
+        document.getElementById("status").innerText =
+          "Essay yuborildi. AI tekshiradi...";
+        document.getElementById("essay").value = "";
+      });
+    }
+  </script>
+
+</body>
+</html>
